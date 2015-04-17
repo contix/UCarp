@@ -43,6 +43,7 @@ static void usage(void)
         "--daemonize (-B): run in background\n"
         "--ignoreifstate (-S): ignore interface state (down, no carrier)\n"
         "--nomcast (-M): use broadcast (instead of multicast) advertisements\n"
+        "--port=<port> (-N <port>): use port for broadcast (with -M)\n"
         "--facility=<facility> (-f): set syslog facility (default=daemon)\n"
         "--xparam=<value> (-x): extra parameter to send to up/down scripts\n"       
         "\n"
@@ -133,6 +134,14 @@ int main(int argc, char *argv[])
                 return 1;
             }
             vhid = (unsigned char) strtoul(optarg, NULL, 0);
+            break;            
+        }       
+        case 'N': {
+            if (strtoul(optarg, NULL, 0) > 10000 || strtol(optarg, NULL, 0) < 1) {
+                logfile(LOG_ERR, _("port must be between 1 and 10000."));
+                return 1;
+            }
+            port = (unsigned char) strtoul(optarg, NULL, 0);
             break;            
         }       
         case 'p': {
